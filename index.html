@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ufuk Kantarci - Makine Muhendisi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0eeeb; --white: #f7f6f3; --sidebar: #1c1c1e;
+  --accent: #4a7fa5; --text: #1a1a1a; --text-mid: #555;
+  --text-dim: #999; --border: #ddd9d4; --border-dark: #c0bbb4;
+  --sans: "Barlow", sans-serif; --cond: "Barlow Condensed", sans-serif;
+  --mono: "IBM Plex Mono", monospace; --sw: 260px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); display: flex; -webkit-font-smoothing: antialiased; }
+
+.sidebar { width: var(--sw); min-height: 100vh; background: var(--sidebar); position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; padding: 2rem 1.75rem; z-index: 100; overflow-y: auto; }
+.s-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; object-position: top; border: 3px solid rgba(255,255,255,0.1); margin-bottom: 1rem; display: block; }
+.s-name { font-family: var(--cond); font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: 0.05em; line-height: 1.1; margin-bottom: 0.3rem; }
+.s-title { font-size: 0.65rem; color: rgba(255,255,255,0.38); letter-spacing: 0.08em; margin-bottom: 1.75rem; line-height: 1.5; }
+.s-nav { list-style: none; flex: 1; }
+.s-nav a { display: block; padding: 0.55rem 0.7rem; color: rgba(255,255,255,0.48); text-decoration: none; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; border-radius: 3px; border-left: 2px solid transparent; margin-bottom: 2px; cursor: pointer; transition: all 0.15s; }
+.s-nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.s-nav a.on { color: #fff; border-left-color: var(--accent); background: rgba(74,127,165,0.14); }
+.s-foot { margin-top: auto; padding-top: 1.5rem; font-family: var(--mono); font-size: 0.55rem; color: rgba(255,255,255,0.16); line-height: 1.7; }
+
+.main { margin-left: var(--sw); flex: 1; position: relative; min-height: 100vh; }
+.panel { display: none; padding: 60px 50px; max-width: 840px; }
+.panel.on { display: block; }
+
+.lbl { font-family: var(--mono); font-size: 0.63rem; color: var(--accent); letter-spacing: 0.18em; margin-bottom: 0.6rem; }
+h2 { font-family: var(--cond); font-size: clamp(1.9rem,4vw,2.9rem); font-weight: 700; color: var(--text); line-height: 1.05; margin-bottom: 2.2rem; }
+h2 em { font-style: normal; color: var(--accent); font-weight: 300; }
+
+.hero-layout { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; align-items: center; min-height: 70vh; }
+.hero-photo-big { width: 100%; height: auto; max-height: 620px; object-fit: contain; border-radius: 4px; display: block; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 6px; box-shadow: 0 0 6px #22c55e88; }
+.eyebrow { font-family: var(--mono); font-size: 0.67rem; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 1.5rem; display: flex; align-items: center; }
+.hero-name { font-family: var(--cond); font-size: clamp(2.8rem,5.5vw,5rem); font-weight: 800; line-height: 0.9; margin-bottom: 0.4rem; }
+.hero-name em { display: block; font-style: normal; color: var(--accent); font-weight: 300; font-size: 0.78em; }
+.hero-sub { font-size: 0.8rem; letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 1.5rem; }
+.hero-desc { font-size: 0.97rem; color: var(--text-mid); line-height: 1.85; margin-bottom: 2rem; }
+.btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.btn { font-family: var(--cond); font-size: 0.8rem; font-weight: 700; text-decoration: none; padding: 0.7rem 1.6rem; border-radius: 3px; transition: all 0.15s; cursor: pointer; border: none; letter-spacing: 0.1em; display: inline-block; }
+.btn-d { background: var(--sidebar); color: #fff; }
+.btn-d:hover { background: #333; }
+.btn-o { background: transparent; color: var(--text); border: 1.5px solid var(--border-dark); }
+.btn-o:hover { border-color: var(--sidebar); }
+.stats { display: grid; grid-template-columns: repeat(3,1fr); background: var(--sidebar); border-radius: 4px; }
+.stat { padding: 1.25rem 1.5rem; border-right: 1px solid rgba(255,255,255,0.08); }
+.stat:last-child { border-right: none; }
+.stat-n { font-family: var(--cond); font-size: 2.4rem; color: #fff; font-weight: 800; line-height: 1; margin-bottom: 0.2rem; }
+.stat-l { font-size: 0.58rem; color: rgba(255,255,255,0.35); font-family: var(--mono); letter-spacing: 0.1em; }
+
+.about-txt p { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 1rem; line-height: 1.85; }
+table.meta { width: 100%; border-collapse: collapse; margin-top: 1.75rem; }
+table.meta tr { border-bottom: 1px solid var(--border); }
+table.meta td { padding: 0.8rem 0; font-size: 0.83rem; vertical-align: top; }
+table.meta td:first-child { font-family: var(--mono); font-size: 0.63rem; color: var(--text-dim); letter-spacing: 0.1em; width: 33%; padding-right: 1rem; }
+.pill { display: inline-block; font-size: 0.76rem; padding: 0.25rem 0.7rem; border: 1.5px solid var(--border); border-radius: 100px; color: var(--text-mid); margin: 0.15rem 0.2rem; }
+
+.svc { display: grid; grid-template-columns: 28px 1fr; gap: 1rem; padding: 1.4rem 0; border-bottom: 1px solid var(--border); }
+.svc:first-child { border-top: 1px solid var(--border); }
+.svc-n { font-family: var(--mono); font-size: 0.58rem; color: var(--text-dim); }
+.svc-h { font-family: var(--cond); font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+.svc-d { font-size: 0.82rem; color: var(--text-mid); line-height: 1.55; }
+
+.exp { padding: 2.2rem 0; border-bottom: 1px solid var(--border); }
+.exp:first-child { border-top: 1px solid var(--border); }
+.exp-h { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem; }
+.exp-c { font-family: var(--cond); font-size: 1.4rem; font-weight: 700; }
+.exp-r { font-size: 0.8rem; color: var(--text-mid); margin-top: 0.15rem; }
+.exp-p { font-family: var(--mono); font-size: 0.63rem; color: var(--text-dim); white-space: nowrap; padding-top: 0.3rem; }
+.exp ul { list-style: none; }
+.exp li { font-size: 0.86rem; color: var(--text-mid); padding-left: 1rem; position: relative; margin-bottom: 0.4rem; line-height: 1.6; }
+.exp li::before { content: "—"; position: absolute; left: 0; color: var(--border-dark); }
+
+.plist { display: flex; flex-direction: column; gap: 3px; }
+.pcard { background: var(--white); border: 1px solid var(--border); overflow: hidden; border-radius: 2px; transition: border-color 0.2s; }
+.pcard:hover { border-color: var(--accent); }
+.pgallery { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.pgallery img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.pphoto { width: 100%; height: 220px; object-fit: cover; display: block; }
+.pbody { padding: 1.25rem 1.75rem 1.75rem; }
+.ptxt { padding: 1.5rem 1.75rem; }
+.psec { font-family: var(--mono); font-size: 0.58rem; color: var(--accent); letter-spacing: 0.14em; margin-bottom: 0.35rem; }
+.pname { font-family: var(--cond); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.pdesc { font-size: 0.81rem; color: var(--text-mid); line-height: 1.55; margin-bottom: 0.8rem; }
+.ptags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ptag { font-family: var(--mono); font-size: 0.56rem; padding: 0.18rem 0.45rem; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 2px; }
+
+.contact-intro { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; margin-bottom: 2rem; max-width: 480px; }
+.cch { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2.5rem; }
+.cch a { display: flex; align-items: center; justify-content: space-between; background: var(--white); border: 1px solid var(--border); padding: 0.9rem 1.1rem; text-decoration: none; color: var(--text); transition: border-color 0.15s; }
+.cch a:hover { border-color: var(--accent); }
+.cch-l { display: flex; align-items: center; gap: 0.8rem; }
+.cch-i { width: 32px; height: 32px; background: var(--bg); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+.cch-n { font-family: var(--cond); font-size: 0.85rem; font-weight: 700; }
+.cch-v { font-size: 0.7rem; color: var(--text-dim); font-family: var(--mono); }
+.form { display: flex; flex-direction: column; gap: 1rem; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field label { font-size: 0.63rem; font-weight: 600; color: var(--text-mid); letter-spacing: 0.1em; font-family: var(--mono); }
+.field input, .field textarea { background: var(--white); border: 1.5px solid var(--border); color: var(--text); padding: 0.7rem 0.9rem; font-family: var(--sans); font-size: 0.86rem; outline: none; border-radius: 3px; resize: vertical; transition: border-color 0.15s; }
+.field input:focus, .field textarea:focus { border-color: var(--sidebar); }
+.field textarea { min-height: 100px; }
+footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+footer p { font-size: 0.65rem; color: var(--text-dim); font-family: var(--mono); }
+
+@media (max-width: 900px) { .hero-layout { grid-template-columns: 1fr; } .hero-photo-big { height: 300px; order: -1; } }
+@media (max-width: 700px) {
+  :root { --sw: 0px; }
+  .sidebar { transform: translateX(-260px); transition: transform 0.3s ease; width: 260px; }
+  .sidebar.open { transform: translateX(0); }
+  .mob-nav { display: flex; }
+  .mob-overlay { display: block; }
+  .mob-overlay.show { opacity: 1; pointer-events: all; }
+  .panel { padding: 40px 20px; }
+  .stats { grid-template-columns: 1fr; }
+  .frow { grid-template-columns: 1fr; }
+  .pgallery { grid-template-columns: 1fr; }
+}
+@media (min-width: 701px) {
+  .mob-nav { display: none; }
+  .mob-overlay { display: none; }
+}
+
+.mob-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; background: #1c1c1e;
+  z-index: 200; align-items: center;
+  padding: 0 1.25rem; justify-content: space-between;
+}
+.mob-logo { font-family: "Barlow Condensed", sans-serif; font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: 0.05em; }
+.mob-btn { background: none; border: none; cursor: pointer; padding: 6px; display: flex; flex-direction: column; gap: 5px; }
+.mob-btn span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+.mob-btn.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.mob-btn.active span:nth-child(2) { opacity: 0; }
+.mob-btn.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mob-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+@media (max-width: 700px) {
+  .main { margin-left: 0; padding-top: 56px; }
+}
+
+
+.about-layout { display: grid; grid-template-columns: 1fr 320px; gap: 3rem; align-items: start; }
+.about-left { }
+.about-right { }
+.about-photo { width: 100%; height: 420px; object-fit: cover; object-position: center top; border-radius: 4px; display: block; border: 1px solid var(--border); }
+@media (max-width: 900px) { .about-layout { grid-template-columns: 1fr; } .about-photo { height: 280px; } }
+
+</style>
+</head>
+<body>
+<div class="mob-nav">
+  <span class="mob-logo">UFUK KANTARCI</span>
+  <button class="mob-btn" id="mob-btn" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="mob-overlay" id="mob-overlay" onclick="toggleMenu()"></div>
+<aside class="sidebar" id="sidebar">
+<img class="s-photo" src="imgs/avatar.jpg" alt="Ufuk Kantarci">
+<div class="s-name">UFUK<br>KANTARCI</div>
+<div class="s-title">Makine Mühendisi<br>&amp; Endüstriyel Tasarımcı</div>
+<ul class="s-nav">
+<li><a href="#" class="on" data-p="home">HOŞGELDİNİZ</a></li>
+<li><a href="#" data-p="about">HAKKIMDA</a></li>
+<li><a href="#" data-p="services">HİZMETLER</a></li>
+<li><a href="#" data-p="experience">DENEYİM</a></li>
+<li><a href="#" data-p="projects">PROJELER</a></li>
+<li><a href="#" data-p="contact">İLETİŞİM</a></li>
+</ul>
+<div class="s-foot">2026 Ufuk Kantarcı<br>Plussonic Metal Sanayi A.S.<br>Istanbul, TR</div>
+</aside>
+<main class="main">
+<div class="panel on" id="p-home">
+<div class="hero-layout">
+<div>
+<div class="eyebrow"><span class="dot"></span>İstanbul, Türkiye — Aktif</div>
+<div class="hero-name">UFUK<em>KANTARCI</em></div>
+<div class="hero-sub">MAKİNE MÜHENDİSİ &amp; ENDÜSTRİYEL TASARIMCI</div>
+<p class="hero-desc">Endüstriyel yıkama makineleri ve özel makine tasarımı alanında uzmanım. Plussonic'in kurucu ortağı olarak mühendisliği üretime taşıyan çözümler geliştiriyorum.</p>
+<div class="btns"><a href="#" class="btn btn-d nav-btn" data-p="contact">İLETİŞİME GEC</a><a href="#" class="btn btn-o nav-btn" data-p="projects">PROJELERI GOR</a></div>
+<div class="stats"><div class="stat"><div class="stat-n">10+</div><div class="stat-l">Yıl Tecrübe</div></div><div class="stat"><div class="stat-n">50+</div><div class="stat-l">Özel Makine</div></div><div class="stat"><div class="stat-n">2</div><div class="stat-l">Ana Sektör</div></div></div>
+</div>
+<img class="hero-photo-big" src="imgs/hero.jpg" alt="Ufuk Kantarci">
+</div>
+</div>
+<div class="panel" id="p-about">
+<div class="lbl">HAKKIMDA</div>
+<h2>Mühendisliği <em>üretime taşıyorum.</em></h2>
+<div class="about-layout">
+<div class="about-left">
+<div class="about-txt"><p>Makine mühendisi ve girişimciyim. Endüstriyel yıkama makineleri ve özel makine tasarımı alanında uzmanım. Kurucu ortağı olduğum Plussonic'te endüstriyel temizlik makinelerinin tasarımı, geliştirilmesi ve üretimi üzerine çalışıyorum.</p><p>Özel üretim makineler, endüstriyel otomasyon çözümleri ve müşteriye özel mühendislik projeleri geliştirdim. SolidWorks başta olmak üzere ileri CAD araçlarıyla çalışıyor, mühendislik ile üretim arasında köprü kuran çözümler üretiyorum.</p><p>Teknik çalışmaların yanında yatırım, teknoloji, üretim sistemleri ve yeni iş modelleri üzerine araştırma yapmaktan keyif alıyorum.</p></div>
+<table class="meta"><tr><td>Şirket</td><td>Plussonic Metal Sanayi A.Ş.</td></tr><tr><td>Görev</td><td>Kurucu Ortak &amp; Baş Tasarımcı</td></tr><tr><td>Uzmanlık</td><td>Endüstriyel Makine Tasarımı</td></tr><tr><td>Yazılım</td><td>SolidWorks, CAD/CAM</td></tr><tr><td>Konum</td><td>İstanbul, Türkiye</td></tr><tr><td>İlgi Alanları</td><td><span class="pill">Mühendislik</span><span class="pill">Yatırım</span><span class="pill">Trading</span><span class="pill">Tarım</span><span class="pill">Otomasyon</span><span class="pill">Gitar</span><span class="pill">Fitness</span></td></tr></table>
+</div>
+<div class="about-right"><img class="about-photo" src="imgs/about.jpg" alt="Ufuk Kantarci - Uretim Atolyesinde"></div>
+</div>
+<div class="panel" id="p-services">
+<div class="lbl">HİZMETLER</div>
+<h2>Ne <em>yapıyorum?</em></h2>
+<div class="svc"><span class="svc-n">01</span><div><div class="svc-h">ENDÜSTRİYEL MAKİNE TASARIMI</div><div class="svc-d">Sektöre özel makinelerin konsept geliştirmeden üretime kadar tam tasarım süreci.</div></div></div>
+<div class="svc"><span class="svc-n">02</span><div><div class="svc-h">ÖZEL MAKİNE GELİŞTİRME</div><div class="svc-d">Müşteri ihtiyaçlarına göre sıfırdan tasarlanan, mevcut sistemlere entegre edilebilir çözümler.</div></div></div>
+<div class="svc"><span class="svc-n">03</span><div><div class="svc-h">ENDÜSTRİYEL YIKAMA SİSTEMLERİ</div><div class="svc-d">Gıda, lojistik ve üretim sektörlerine yönelik yüksek kapasiteli yıkama hattı tasarımı.</div></div></div>
+<div class="svc"><span class="svc-n">04</span><div><div class="svc-h">SOLIDWORKS 3D CAD TASARIM</div><div class="svc-d">Karmaşık makine sistemlerinin detaylı 3D modellenmesi ve teknik çizim üretimi.</div></div></div>
+<div class="svc"><span class="svc-n">05</span><div><div class="svc-h">ÜRETİM OPTİMİZASYONU</div><div class="svc-d">Mevcut hatların analizi, darboğazların giderilmesi ve verimlilik artırıcı çözüm önerileri.</div></div></div>
+<div class="svc"><span class="svc-n">06</span><div><div class="svc-h">PROTOTİP GELİŞTİRME</div><div class="svc-d">Ürün fikirlerinin fiziksel prototipe dönüştürülmesi ve üretim için optimizasyon.</div></div></div>
+<div class="svc"><span class="svc-n">07</span><div><div class="svc-h">OTOMASYON ÇÖZÜMLERİ</div><div class="svc-d">Üretim süreçlerini otomatize eden akıllı makine sistemleri ve entegrasyon tasarımı.</div></div></div>
+<div class="svc"><span class="svc-n">08</span><div><div class="svc-h">MÜHENDİSLİK DANIŞMANLIĞI</div><div class="svc-d">Makine seçimi, teknik fizibilite analizi ve projeler için bağımsız danışmanlık.</div></div></div>
+</div>
+<div class="panel" id="p-experience">
+<div class="lbl">DENEYİM</div>
+<h2>İş <em>geçmişi.</em></h2>
+<div class="exp"><div class="exp-h"><div><div class="exp-c">PLUSSONİC METAL SANAYİ A.Ş.</div><div class="exp-r">Kurucu Ortak &amp; Baş Tasarımcı</div></div><div class="exp-p">2010'lar — Günümüze</div></div><ul><li>Endüstriyel yıkama makineleri tasarımı ve seri üretime hazırlanması</li><li>Özel üretim makine projelerinin uçtan uca geliştirilmesi ve yönetimi</li><li>Ar-Ge çalışmaları ve prototip tasarım süreçlerinin yürütülmesi</li><li>Gıda, lojistik ve otomotiv sektörlerine yönelik özel sistemler</li><li>Büyük ölçekli kurumsal müşteriler için özel sistem geliştirme</li><li>SolidWorks ile kompleks makine sistemlerinin 3D tasarımı</li></ul></div>
+</div>
+<div class="panel" id="p-projects">
+<div class="lbl">PROJELER</div>
+<h2>Tamamlanan <em>çalışmalar.</em></h2>
+<div class="plist">
+<div class="pcard">
+<div class="pgallery"><img src="imgs/adoksan1.jpg" alt=""><img src="imgs/adoksan2.jpg" alt=""></div>
+<div class="pbody">
+<div class="psec">Otomotiv — 2024</div>
+<div class="pname">ADÖKSAN — ROBOT TAŞIMALI ULTRASONİK YIKAMA</div>
+<div class="pdesc">Alüminyum döküm parça üreticisi Adöksan için tasarlanan çok istasyonlu sistem. Robot taşımalı, ultrasonik yıkama, durulama ve kurutma istasyonlarını tek hatta birleştiriyor.</div>
+<div class="ptags"><span class="ptag">Ultrasonik</span><span class="ptag">Robot Taşıma</span><span class="ptag">Çok İstasyonlu</span><span class="ptag">2024</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<img class="pphoto" src="imgs/gratis.jpg" alt="">
+<div class="pbody">
+<div class="psec">Lojistik — 2025</div>
+<div class="pname">GRATİS — KASA YIKAMA PROJESİ</div>
+<div class="pdesc">Gratis lojistik tesisi için tasarlanan yüksek kapasiteli tam otomatik Plussonic kasa yıkama hattı. 2025 yılında başarıyla devreye alındı.</div>
+<div class="ptags"><span class="ptag">Özel Tasarım</span><span class="ptag">Yüksek Kapasite</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<div class="pgallery"><img src="imgs/ukinox1.jpg" alt=""><img src="imgs/ukinox2.jpg" alt=""></div>
+<div class="pbody">
+<div class="psec">Endüstriyel — 2026</div>
+<div class="pname">UKİNOX — EVYE YIKAMA MAKİNESİ</div>
+<div class="pdesc">Ukinox firması için tasarlanan uzun konveyör hatlı, yüksek kapasiteli endüstriyel evye yıkama sistemi.</div>
+<div class="ptags"><span class="ptag">Özel Tasarım</span><span class="ptag">Konveyör Hat</span><span class="ptag">2026</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<div class="pgallery"><img src="imgs/ast1.jpg" alt=""><img src="imgs/ast2.jpg" alt=""></div>
+<div class="pbody">
+<div class="psec">Kimya / Gıda — 2025</div>
+<div class="pname">AST KANİSTER — VARİL YIKAMA MAKİNESİ</div>
+<div class="pdesc">İki varil kapasiteli, paslanmaz çelik gövde, döner fırça sistemi ve güvenlik bariyerleriyle donatılmış otomatik varil yıkama ünitesi.</div>
+<div class="ptags"><span class="ptag">Varil Yıkama</span><span class="ptag">Özel Üretim</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<div class="pgallery"><img src="imgs/ako1.jpg" alt=""><img src="imgs/ako2.jpg" alt=""></div>
+<div class="pbody">
+<div class="psec">Otomotiv — 2025</div>
+<div class="pname">AKO JANT — YIKAMA &amp; KURUTMA MAKİNESİ</div>
+<div class="pdesc">90 derece dönüşlü L formunda özel tasarım jant yıkama ve kurutma makinesi. Fabrika yerleşim planına göre şekillendirilmiş yüksek kapasiteli hat sistemi.</div>
+<div class="ptags"><span class="ptag">L Formu</span><span class="ptag">Yikama & Kurutma</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<img class="pphoto" src="imgs/tatbak.jpg" alt="">
+<div class="pbody">
+<div class="psec">Gıda — 2025</div>
+<div class="pname">TATBAK — KASA YIKAMA MAKİNESİ</div>
+<div class="pdesc">Yüksek debili kurutma fanları ve çok bölmeli yıkama hattıyla gıda hijyen standartlarını karşılayan paslanmaz çelik sistem.</div>
+<div class="ptags"><span class="ptag">Kasa Yıkama</span><span class="ptag">Gıda Hijyeni</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<div class="pgallery"><img src="imgs/alterna1.jpg" alt=""><img src="imgs/alterna2.jpg" alt=""></div>
+<div class="pbody">
+<div class="psec">Gıda — 2025</div>
+<div class="pname">ALTERNA GIDA / ZUBER — KASA &amp; KALIP YIKAMA</div>
+<div class="pdesc">Tel konveyör bantlı, plastik perde girişli ve tam paslanmaz çelik gövdeli kasa ve kalıp yıkama sistemi.</div>
+<div class="ptags"><span class="ptag">Kasa & Kalip</span><span class="ptag">Tel Konveyör</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<img class="pphoto" src="imgs/kromevye.jpg" alt="">
+<div class="pbody">
+<div class="psec">Mutfak Ekipmanları — 2024</div>
+<div class="pname">KROM EVYE — EVYE YIKAMA MAKİNESİ</div>
+<div class="pdesc">Üretim hattına entegre, paslanmaz çelik evyelerin seri temizliğine yönelik konveyörlü yıkama sistemi.</div>
+<div class="ptags"><span class="ptag">Evye Yıkama</span><span class="ptag">Konveyör Hat</span><span class="ptag">2024</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<img class="pphoto" src="imgs/divan.jpg" alt="">
+<div class="pbody">
+<div class="psec">Gıda / Çikolata — 2025</div>
+<div class="pname">DİVAN — ÇİKOLATA KALIP YIKAMA</div>
+<div class="pdesc">Hassas plastik kalıpların zarar görmeden yıkanmasına yönelik özel yıkama sistemi. Temizlenen kalıplar üretim hattına direkt besleniyor.</div>
+<div class="ptags"><span class="ptag">Kalip Yikama</span><span class="ptag">Hassas Yıkama</span><span class="ptag">2025</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+<div class="pcard">
+<div class="ptxt">
+<div class="psec">Gıda Sektörü</div>
+<div class="pname">PAKEL GIDA — YIKAMA SİSTEMİ</div>
+<div class="pdesc">Pakel Gıda firması için tasarlanan endüstriyel yıkama sistemi. Görsel yakında eklenecek.</div>
+<div class="ptags"><span class="ptag">Gıda Hijyeni</span><span class="ptag">Özel Tasarım</span><span class="ptag">Tamamlandi</span></div>
+</div></div>
+</div></div>
+<div class="panel" id="p-contact">
+<div class="lbl">İLETİŞİM</div>
+<h2>Birlikte <em>çalışalım.</em></h2>
+<p class="contact-intro">Yeni bir makine projesi, tasarım danışmanlığı veya teknik bir soru için benimle iletişime geçebilirsiniz. Genellikle 24 saat içinde yanıt veriyorum.</p>
+<div class="cch"><a href="mailto:ufukkantarci@gmail.com"><div class="cch-l"><div class="cch-i">&#9993;</div><div><div class="cch-n">E-POSTA</div><div class="cch-v">ufukkantarci@gmail.com</div></div></div><span>&#8594;</span></a><a href="https://www.linkedin.com/in/ufuk-kantarc%C4%B1-7124b326/" target="_blank"><div class="cch-l"><div class="cch-i">in</div><div><div class="cch-n">LINKEDIN</div><div class="cch-v">linkedin.com/in/ufuk-kantarcı</div></div></div><span>&#8594;</span></a><a href="#"><div class="cch-l"><div class="cch-i">&#128197;</div><div><div class="cch-n">ONLİNE TOPLANTI</div><div class="cch-v">Randevu Al</div></div></div><span>&#8594;</span></a></div>
+<form class="form" name="iletisim" method="POST" data-netlify="true" action="/tesekkur.html">
+<input type="hidden" name="form-name" value="iletisim"><div class="frow"><div class="field"><label>Ad Soyad</label><input type="text" name="ad-soyad" placeholder="Ahmet Yılmaz"></div><div class="field"><label>E-Posta</label><input type="email" name="eposta" placeholder="ahmet@sirket.com"></div></div><div class="field"><label>Konu</label><input type="text" name="konu" placeholder="Makine tasarımı projesi hakkında..."></div><div class="field"><label>Mesaj</label><textarea name="mesaj" placeholder="Projenizi kısaca anlatınız..."></textarea></div><div><button type="submit" class="btn btn-d" id="sbtn">MESAJ GÖNDER</button></div></form>
+<footer><p>2026 Ufuk Kantarcı</p><p>Plussonic Metal Sanayi A.Ş. — İstanbul</p></footer>
+</div>
+</main>
+<script>
+function show(name) {
+  var panels = document.querySelectorAll(".panel");
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove("on");
+  var p = document.getElementById("p-" + name);
+  if (p) { p.classList.add("on"); p.scrollTop = 0; }
+  var links = document.querySelectorAll(".s-nav a");
+  for (var j = 0; j < links.length; j++) {
+    links[j].classList.toggle("on", links[j].getAttribute("data-p") === name);
+  }
+}
+var navLinks = document.querySelectorAll(".s-nav a");
+for (var i = 0; i < navLinks.length; i++) {
+  navLinks[i].addEventListener("click", function(e) { e.preventDefault(); show(this.getAttribute("data-p")); });
+}
+var navBtns = document.querySelectorAll(".nav-btn");
+for (var i = 0; i < navBtns.length; i++) {
+  navBtns[i].addEventListener("click", function(e) { e.preventDefault(); show(this.getAttribute("data-p")); });
+}
+
+
+function toggleMenu() {
+  var sidebar = document.getElementById("sidebar");
+  var btn = document.getElementById("mob-btn");
+  var overlay = document.getElementById("mob-overlay");
+  sidebar.classList.toggle("open");
+  btn.classList.toggle("active");
+  overlay.classList.toggle("show");
+}
+// Menü linkine tıklayınca kapat
+var navLinks2 = document.querySelectorAll(".s-nav a");
+for (var i = 0; i < navLinks2.length; i++) {
+  navLinks2[i].addEventListener("click", function() {
+    var sidebar = document.getElementById("sidebar");
+    var btn = document.getElementById("mob-btn");
+    var overlay = document.getElementById("mob-overlay");
+    if (sidebar.classList.contains("open")) {
+      sidebar.classList.remove("open");
+      btn.classList.remove("active");
+      overlay.classList.remove("show");
+    }
+  });
+}
+
+</script>
+</body>
+</html>
